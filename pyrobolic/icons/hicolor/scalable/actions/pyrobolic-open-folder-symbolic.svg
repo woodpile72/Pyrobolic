@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="2.35714 3.35714 58.2857 58.2857"><defs><mask id="glyph" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><path d="M6 18 Q6 12 12 12 H25 L31 18 H51 Q57 18 57 24 V48 Q57 53 51 53 H12 Q6 53 6 47Z" fill="#FFFFFF" /><path d="M9 25 H54" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></mask></defs><rect width="64" height="64" fill="#2e3436" mask="url(#glyph)" /></svg>

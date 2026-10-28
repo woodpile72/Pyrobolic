@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.venv/
+.qa/
+*.deb
+*.tar.xz
+*.md
+*.markdown
+*.mdown

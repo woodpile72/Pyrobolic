@@ -1,0 +1,28 @@
+Pyrobolic
+Copyright 2026 Erick Woods
+Licensed under GPL-3.0-only. See LICENSE for the complete license text.
+
+Pyrobolic uses separately distributed upstream software, including Python,
+PyGObject, GLib/Gio, GTK 4, libadwaita, GdkPixbuf, libsecret, python-xlib,
+yt-dlp, FFmpeg and Deno. These components remain under their respective
+upstream licenses. They are not relicensed by Pyrobolic's license.
+
+The Debian package depends on distribution-provided libraries and tools.
+Optional managed download support retrieves official yt-dlp and Deno releases;
+yt-dlp's JavaScript challenge components (EJS) come from its official executable.
+No third-party runtime binaries are embedded in this source tree or Debian package.
+
+Upstream projects:
+https://www.python.org/
+https://pygobject.gnome.org/
+https://www.gtk.org/
+https://gitlab.gnome.org/GNOME/libadwaita
+https://gitlab.gnome.org/GNOME/libsecret
+https://github.com/python-xlib/python-xlib
+https://github.com/yt-dlp/yt-dlp
+https://github.com/yt-dlp/ejs
+https://ffmpeg.org/
+https://github.com/denoland/deno
+
+Optional SponsorBlock functionality uses its community-submitted timestamp service:
+https://sponsor.ajay.app/

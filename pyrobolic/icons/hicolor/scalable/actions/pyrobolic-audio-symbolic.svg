@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="4 5.5 56 56"><defs><mask id="glyph" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><path d="M25 15 L51 9 V43 H45 V19 L31 22 V49 H25Z" fill="#FFFFFF" /><circle cx="22" cy="49" r="9" fill="#FFFFFF" /><circle cx="42" cy="43" r="9" fill="#FFFFFF" /></mask></defs><rect width="64" height="64" fill="#2e3436" mask="url(#glyph)" /></svg>
