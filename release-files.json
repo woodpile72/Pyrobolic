@@ -234,8 +234,8 @@
     "tests/ui_transfer_history.py",
     "tests/ui_window_state.py",
     "README.rst",
-    "docs/screenshots/downloads.png",
-    "docs/screenshots/new-download.png",
-    "docs/screenshots/about.png"
+    "media/screenshots/downloads.png",
+    "media/screenshots/new-download.png",
+    "media/screenshots/about.png"
   ]
 }

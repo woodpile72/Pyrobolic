@@ -16,7 +16,7 @@ Powered by yt-dlp and FFmpeg.
 · `Release notes <https://github.com/woodpile72/Pyrobolic/releases/tag/v1.0.0>`_
 · `Report an issue <https://github.com/woodpile72/Pyrobolic/issues>`_
 
-.. image:: docs/screenshots/downloads.png
+.. image:: media/screenshots/downloads.png
    :alt: Pyrobolic's dark Downloads view with video and audio progress and queued items
    :width: 880
 
@@ -86,7 +86,7 @@ What it does
   YouTube, with staged updates that preserve the working version on failure or
   cancellation. System installations are kept separate.
 
-.. image:: docs/screenshots/new-download.png
+.. image:: media/screenshots/new-download.png
    :alt: New Download with video selection, destination, editable filename and More Options
    :width: 880
 
@@ -117,7 +117,7 @@ Useful shortcuts: ``Ctrl+N`` for New Download, ``Ctrl+I`` for batch import,
 ``Ctrl+1`` / ``Ctrl+2`` for Downloads / History, ``Ctrl+F`` to search History,
 and ``Ctrl+Shift+O`` to open the download folder.
 
-.. image:: docs/screenshots/about.png
+.. image:: media/screenshots/about.png
    :alt: Pyrobolic About screen showing the flame-and-filmstrip app icon, Erick Woods and version 1.0.0
    :width: 880
 
