@@ -232,6 +232,10 @@
     "tests/ui_smoke.py",
     "tests/ui_startup.py",
     "tests/ui_transfer_history.py",
-    "tests/ui_window_state.py"
+    "tests/ui_window_state.py",
+    "README.rst",
+    "docs/screenshots/downloads.png",
+    "docs/screenshots/new-download.png",
+    "docs/screenshots/about.png"
   ]
 }
