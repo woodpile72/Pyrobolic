@@ -96,7 +96,7 @@ def build(output, epoch=1793188800, revision=1, maintainer=DEFAULT_MAINTAINER):
         size = sum(path.stat().st_size for path in stage.rglob("*") if path.is_file())
         write("DEBIAN/control", f"Package: pyrobolic\nVersion: {version}\nArchitecture: all\n"
               f"Maintainer: {maintainer}\nSection: video\nPriority: optional\nInstalled-Size: {(size + 1023) // 1024}\n"
-              "Depends: python3 (>= 3.10), python3-gi, python3-xlib, gir1.2-gtk-4.0 (>= 4.14), gir1.2-adw-1 (>= 1.5), gir1.2-gdkpixbuf-2.0, gir1.2-secret-1, ffmpeg, yt-dlp\n"
+              "Depends: python3 (>= 3.10), python3-gi, python3-xlib, gir1.2-gtk-4.0 (>= 4.14), gir1.2-adw-1 (>= 1.5), gir1.2-gdkpixbuf-2.0, librsvg2-common, gir1.2-secret-1, ffmpeg, yt-dlp\n"
               "Recommends: gnome-keyring, xdg-utils\n"
               "Description: Native GTK media downloader powered by yt-dlp\n"
               " Download video and audio with playlists, format and subtitle controls,\n"
