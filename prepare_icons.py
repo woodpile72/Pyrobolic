@@ -11,7 +11,7 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parent
-SOURCE = ROOT / "pyrobolic-icon-set"
+SOURCE = ROOT / "media"
 OUTPUT = ROOT / "pyrobolic/icons/hicolor"
 NS = "http://www.w3.org/2000/svg"
 ET.register_namespace("", NS)
