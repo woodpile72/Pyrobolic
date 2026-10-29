@@ -62,6 +62,12 @@ class TransferMediaTests(unittest.TestCase):
                 while job.progress < 0.05 and job.id in queue.running and time.monotonic() < deadline:
                     time.sleep(0.05)
                 self.assertGreater(job.progress, 0.05, job.detail)
+                # Pause only after data reaches disk, not just a progress event.
+                def written_partial():
+                    return any(path.stat().st_size > 0 for path in staging_directory(job).glob("*.part"))
+                while not written_partial() and time.monotonic() < deadline:
+                    time.sleep(0.05)
+                self.assertTrue(written_partial())
                 queue.pause_transfer(job.id, True)
                 time.sleep(0.15)
                 progress = job.progress

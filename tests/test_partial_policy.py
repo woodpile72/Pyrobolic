@@ -73,6 +73,11 @@ class PartialPolicyMediaTests(unittest.TestCase):
                 while job.progress < 0.05 and job.id in queue.running and time.monotonic() < deadline:
                     time.sleep(0.05)
                 self.assertGreater(job.progress, 0.05, job.detail)
+                # Progress may precede the engine's buffered file writes.
+                partial_file = staging_directory(job) / "media.wav"
+                while (not partial_file.exists() or partial_file.stat().st_size == 0) and time.monotonic() < deadline:
+                    time.sleep(0.05)
+                self.assertGreater(partial_file.stat().st_size, 0)
                 queue.cancel(job.id)
                 await_idle(queue)
                 self.assertEqual(job.status, "Canceled")
