@@ -71,10 +71,13 @@ def quit_app():
 try:
     subprocess.run(["gio", "launch", desktop], check=True)
     wait_for(lambda: owned() and len(windows()) == 1)
+    # RecoveryWindow asynchronously loads saved state, then presents Window.
+    time.sleep(2)
+    assert len(windows()) == 1
     original = windows()
     subprocess.run(["gio", "launch", desktop], check=True)
     time.sleep(1)
-    assert windows() == original, "Second menu launch created another window"
+    assert windows() == original, f"Second menu launch changed windows: {original} -> {windows()}"
     quit_app()
     wait_for(lambda: not owned())
 finally:
