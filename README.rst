@@ -12,8 +12,8 @@ choices simple, with detailed format, subtitle and playlist controls when you
 need them. Built with Python, GTK 4 and libadwaita. **No .NET runtime.**
 Powered by yt-dlp and FFmpeg.
 
-`Download Pyrobolic 1.0.2 for Linux (.deb) <https://github.com/woodpile72/Pyrobolic/releases/download/v1.0.2/pyrobolic_1.0.2_all.deb>`_
-· `Release notes <https://github.com/woodpile72/Pyrobolic/releases/tag/v1.0.2>`_
+`Download Pyrobolic 1.0.4 for Linux (.deb) <https://github.com/woodpile72/Pyrobolic/releases/download/v1.0.4/pyrobolic_1.0.4_all.deb>`_
+· `Release notes <https://github.com/woodpile72/Pyrobolic/releases/tag/v1.0.4>`_
 · `Report an issue <https://github.com/woodpile72/Pyrobolic/issues>`_
 
 .. image:: media/screenshots/downloads.png
@@ -27,11 +27,11 @@ Install
 
 The tested target is **Linux Mint 22.3 / Ubuntu 24.04 on x86-64 (amd64)**.
 Download the Debian package and
-`SHA256SUMS <https://github.com/woodpile72/Pyrobolic/releases/download/v1.0.2/SHA256SUMS>`_
+`SHA256SUMS <https://github.com/woodpile72/Pyrobolic/releases/download/v1.0.4/SHA256SUMS>`_
 into the same folder, then run::
 
     sha256sum --ignore-missing -c SHA256SUMS
-    sudo apt install ./pyrobolic_1.0.2_all.deb
+    sudo apt install ./pyrobolic_1.0.4_all.deb
 
 Confirm that the package checksum reports ``OK``, then open **Pyrobolic** from
 your application menu. For an upgrade, quit Pyrobolic first and use the same
@@ -45,10 +45,12 @@ Python; other architectures and distributions have not been verified.
 What it does
 ------------
 
-* **Quick downloads:** clipboard URL prefill on startup, New Download, and
-  restoration from the tray, remembered choices and Quick Download, with review
-  before starting playlists. Tray restoration preserves existing dialogs and
-  never starts a download automatically.
+* **Quick downloads:** clipboard URL prefill at launch, in New Download, on tray
+  restoration and when the main window regains focus. A newly observed URL opens
+  a prefilled dialog without starting inspection or a download. Existing dialogs
+  stay untouched, and an unchanged URL is not offered repeatedly. Remembered
+  choices and Quick Download keep routine downloads short; playlists remain
+  available for review.
 * **Clean filenames:** editable suggestions, optional source IDs, removal of
   recognized view/reaction counters, and collision handling that protects
   existing files.
@@ -130,8 +132,8 @@ To build the released source with Git, Python 3.12 and Debian packaging tools::
 
     git clone https://github.com/woodpile72/Pyrobolic.git
     cd Pyrobolic
-    git checkout v1.0.2
-    python3 release.py /tmp/pyrobolic-release --base-version --commit v1.0.2
+    git checkout v1.0.4
+    python3 release.py /tmp/pyrobolic-release --base-version --commit v1.0.4
 
 Use a new output directory. The release tool builds the specified commit.
 With the application dependencies installed, run the standard tests with::

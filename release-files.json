@@ -236,6 +236,7 @@
     "README.rst",
     "media/screenshots/downloads.png",
     "media/screenshots/new-download.png",
-    "media/screenshots/about.png"
+    "media/screenshots/about.png",
+    "tests/ui_clipboard_focus.py"
   ]
 }

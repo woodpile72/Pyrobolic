@@ -2,4 +2,4 @@
 # Copyright 2026 Erick Woods
 """Pyrobolic: a native GNOME media downloader."""
 
-__version__ = "1.0.2"
+__version__ = "1.0.4"

@@ -1106,6 +1106,7 @@ class DownloadDialog(Adw.Dialog):
             except (GLib.Error, ValueError):
                 return
             if not self.closed and not initial and self.url.get_text() == initial:
+                self.window.last_clipboard_url = url
                 self.url.set_text(url)
         self.url.get_clipboard().read_text_async(None, ready)
 
@@ -2039,6 +2040,10 @@ class Window(Adw.ApplicationWindow):
         self.updating = False
         self.download_dialog = None
         self.batch_dialog = None
+        self.last_clipboard_url = None
+        self.clipboard_offer_serial = 0
+        self.skip_clipboard_focus = False
+        self.connect("notify::is-active", self.clipboard_focus_changed)
         self.actions = ThreadPoolExecutor(max_workers=1, thread_name_prefix="pyro-state")
         self.processes = set()
         self.queue = Queue(store, self.changed)
@@ -2513,6 +2518,7 @@ class Window(Adw.ApplicationWindow):
             return None
         if self.download_dialog and not self.download_dialog.closed:
             return self.download_dialog
+        self.clipboard_offer_serial += 1
         dialog = DownloadDialog(self, initial_url)
         self.download_dialog = dialog
         dialog.present(self)
@@ -2525,20 +2531,54 @@ class Window(Adw.ApplicationWindow):
             return self.download_dialog
         if self.batch_dialog and not self.batch_dialog.closed:
             return self.batch_dialog
+        self.clipboard_offer_serial += 1
         from .batch_ui import BatchDialog
         self.batch_dialog = BatchDialog(self, text)
         self.batch_dialog.present(self)
         return self.batch_dialog
 
-    def offer_clipboard(self):
+    def clipboard_focus_changed(self, *_):
+        # Invalidate reads from a previous focus cycle, including late replies.
+        self.clipboard_offer_serial += 1
+        if not self.is_active():
+            return
+        if self.skip_clipboard_focus:
+            self.skip_clipboard_focus = False
+            return
+        self.offer_clipboard(require_active=True)
+
+    def can_offer_clipboard(self, require_active=False):
+        application = self.get_application()
+        return (not self.closing and application is not None
+                and not application.pending_urls and application.pending_download is None
+                and application.pending_folder is None
+                and (not require_active or self.is_active())
+                and (self.download_dialog is None or self.download_dialog.closed)
+                and (self.batch_dialog is None or self.batch_dialog.closed)
+                and self.get_visible_dialog() is None)
+
+    def offer_clipboard(self, require_active=False):
+        if not self.can_offer_clipboard(require_active):
+            return
+        self.clipboard_offer_serial += 1
+        serial = self.clipboard_offer_serial
         def ready(clipboard, result):
             try:
-                url = validate_url(clipboard.read_text_finish(result) or "")
-            except (GLib.Error, ValueError):
+                text = clipboard.read_text_finish(result) or ""
+            except GLib.Error:
                 return
-            if (not self.closing and (self.download_dialog is None or self.download_dialog.closed)
-                    and self.get_visible_dialog() is None):
-                self.new_download(url)
+            if (serial != self.clipboard_offer_serial or not self.get_visible()
+                    or not self.can_offer_clipboard(require_active)):
+                return
+            try:
+                url = validate_url(text)
+            except ValueError:
+                self.last_clipboard_url = None
+                return
+            if url == self.last_clipboard_url:
+                return
+            self.last_clipboard_url = url
+            self.new_download(url)
         self.get_display().get_clipboard().read_text_async(None, ready)
 
     def open_folder(self, path):
@@ -2940,6 +2980,8 @@ class RecoveryWindow(Adw.ApplicationWindow):
             application = self.get_application()
             application.store = store
             application.window = Window(application, store)
+            application.window.skip_clipboard_focus = bool(application.pending_urls or
+                application.pending_download is not None or application.pending_folder is not None)
             application.window.present()
             if backup:
                 application.window.toast.add_toast(Adw.Toast(title=f"Original data preserved in {backup.name}"))
@@ -3088,6 +3130,9 @@ class Application(Adw.Application):
                 self.window = Window(self, self.store)
                 if self.pending_download is None and self.pending_folder is None and not self.pending_urls:
                     self.window.offer_clipboard()
+        if isinstance(self.window, Window) and not self.window.is_active():
+            self.window.skip_clipboard_focus = bool(self.pending_urls or
+                self.pending_download is not None or self.pending_folder is not None)
         self.window.present()
         self.show_pending_download()
         self.show_pending_folder()
