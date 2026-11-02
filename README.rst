@@ -45,8 +45,10 @@ Python; other architectures and distributions have not been verified.
 What it does
 ------------
 
-* **Quick downloads:** clipboard URL prefill, remembered choices and Quick
-  Download, with review before starting playlists.
+* **Quick downloads:** clipboard URL prefill on startup, New Download, and
+  restoration from the tray, remembered choices and Quick Download, with review
+  before starting playlists. Tray restoration preserves existing dialogs and
+  never starts a download automatically.
 * **Clean filenames:** editable suggestions, optional source IDs, removal of
   recognized view/reaction counters, and collision handling that protects
   existing files.

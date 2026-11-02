@@ -2536,7 +2536,8 @@ class Window(Adw.ApplicationWindow):
                 url = validate_url(clipboard.read_text_finish(result) or "")
             except (GLib.Error, ValueError):
                 return
-            if not self.closing and self.download_dialog is None and self.get_visible_dialog() is None:
+            if (not self.closing and (self.download_dialog is None or self.download_dialog.closed)
+                    and self.get_visible_dialog() is None):
                 self.new_download(url)
         self.get_display().get_clipboard().read_text_async(None, ready)
 
@@ -2992,7 +2993,7 @@ class Application(Adw.Application):
         from .tray import Tray
         self.background_held = False
         self.exiting = False
-        self.tray = Tray(self.activate, self.tray_add, self.request_quit, self.tray_availability)
+        self.tray = Tray(self.tray_show, self.tray_add, self.request_quit, self.tray_availability)
 
     def sync_background(self, window):
         if not self.exiting:
@@ -3018,6 +3019,12 @@ class Application(Adw.Application):
             self.window.request_quit()
         elif self.window:
             self.window.close()
+
+    def tray_show(self):
+        restoring = isinstance(self.window, Window) and not self.window.get_visible()
+        self.activate()
+        if restoring and not self.window.closing:
+            self.window.offer_clipboard()
 
     def tray_add(self):
         self.activate()

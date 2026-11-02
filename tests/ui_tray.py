@@ -73,7 +73,57 @@ def initial():
     own_host()
 
 
+def clipboard_restore():
+    app.window.get_display().get_clipboard().set("https://example.org/tray-clipboard")
+    hide(app.window)
+    bus_call(ITEM, "Activate", GLib.Variant("(ii)", (0, 0)), "/StatusNotifierItem")
+
+
+def clipboard_prefilled():
+    dialog = app.window.download_dialog
+    assert dialog and dialog.url.get_text() == "https://example.org/tray-clipboard"
+    assert not store.jobs and not app.window.queue.running
+    state["clipboard_dialog"] = dialog
+    dialog.url.set_text("https://example.org/edited-draft")
+    app.window.get_display().get_clipboard().set("https://example.org/different")
+    # GTK routes close requests to the modal dialog; simulate a hidden draft.
+    app.window.set_visible(False)
+    app.tray.invoke(1)
+
+
+def clipboard_preserved():
+    assert app.window.download_dialog is state["clipboard_dialog"]
+    assert app.window.download_dialog.url.get_text() == "https://example.org/edited-draft"
+    app.window.download_dialog.force_close()
+    app.window.get_display().get_clipboard().set("Not a URL")
+
+
+def clipboard_invalid():
+    hide(app.window)
+    app.tray.invoke(1)
+
+
+def clipboard_ignored():
+    assert app.window.get_visible() and app.window.download_dialog.closed
+    app.window.get_display().get_clipboard().set("https://example.org/already-visible")
+    app.tray.invoke(1)
+
+
+def clipboard_again():
+    assert app.window.download_dialog.closed
+    hide(app.window)
+    app.tray.invoke(1)
+
+
+def clipboard_again_prefilled():
+    assert not app.window.download_dialog.closed
+    assert app.window.download_dialog.url.get_text() == "https://example.org/already-visible"
+    app.window.download_dialog.force_close()
+
+
 def hidden():
+    assert app.window.download_dialog.closed
+    app.window.get_display().get_clipboard().set("")
     assert app.tray.ready and app.background_held
     assert len(registrations) == 1
     window = app.window
@@ -244,7 +294,9 @@ def reveal_settings():
     adjustment.set_value(adjustment.get_value() + bounds.get_y() - 150)
 
 
-steps = iter([initial, unavailable_host, hidden, layout, add, duplicate, lost, restart, disabled,
+steps = iter([initial, unavailable_host, clipboard_restore, clipboard_prefilled, clipboard_preserved,
+              clipboard_invalid, clipboard_ignored, clipboard_again, clipboard_again_prefilled,
+              hidden, layout, add, duplicate, lost, restart, disabled,
               appearance, saved, reveal_settings, snapshot, downloading, paused, processing, next_job,
               lambda: None, lambda: None, finished, failed_save])
 started = time.monotonic()
