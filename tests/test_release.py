@@ -68,6 +68,7 @@ class ReleaseTests(unittest.TestCase):
             self.assertEqual(first.read_bytes(), second.read_bytes())
             with tarfile.open(first) as archive:
                 names = archive.getnames()
+                self.assertTrue(archive.getmember("pyrobolic/extensions/firefox/host.py").mode & 0o111)
                 self.assertTrue(all(not name.endswith((".pyc", ".deb", ".log")) and "/.qa/" not in name for name in names))
                 inventory = json.load(archive.extractfile("pyrobolic/SOURCE-MANIFEST.json"))
                 for name, digest in inventory.items():

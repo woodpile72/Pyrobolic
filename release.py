@@ -31,7 +31,7 @@ def snapshot(output, epoch, root=None):
         for name, data in sorted(payload.items()):
             entry = tarfile.TarInfo("pyrobolic/" + name)
             entry.size = len(data)
-            entry.mode = 0o755 if name == "pyrobolic-launcher" else 0o644
+            entry.mode = 0o755 if name in {"pyrobolic-launcher", "extensions/firefox/host.py"} else 0o644
             entry.mtime = epoch
             archive.addfile(entry, io.BytesIO(data))
     return inventory
