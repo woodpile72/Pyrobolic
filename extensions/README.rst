@@ -52,7 +52,8 @@ and in the main Debian package. Automatic extension updates are not configured i
 this initial release. Installing a newer deb replaces its bundled XPI, but users
 must install that signed XPI in Firefox to update the copy in their profile.
 
-A development package includes ``pyrobolic-firefox-unsigned.xpi`` instead. Load it
+A development build without a signed input includes
+``pyrobolic-firefox-unsigned.xpi`` instead. Load it
 through ``about:debugging`` / Load Temporary Add-on; it lasts until Firefox exits.
 Release builds fail until a signed XPI matching the extension source is supplied.
 The build validates payload identity and signature metadata; a normal, non-temporary
@@ -98,3 +99,7 @@ Set GECKODRIVER and PYROBOLIC_FIREFOX_XPI to absolute paths, then run
 ``bash extensions/tests/run-isolated-ui.sh wm /path/to/venv/bin/python extensions/tests/firefox_smoke.py``.
 Set PYROBOLIC_NATIVE_HOST to test an extracted package's adapter. Tests use a fresh
 HOME and session bus; never run automation against the user's desktop/profile.
+
+Set PYROBOLIC_SIGNED_INSTALL=1 to exercise permanent installation in the smoke test.
+Run ``extensions/tests/firefox_signed.py`` through the same isolated wrapper to
+verify signature enforcement and native connectivity across a Firefox restart.

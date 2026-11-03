@@ -40,7 +40,23 @@ try:
   app=subprocess.Popen(['/usr/bin/python3','-m','pyrobolic'],cwd='/tmp',env={**os.environ,'PYTHONPATH':os.environ['PYROBOLIC_APP_ROOT']},stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
   time.sleep(2)
  driver.set_window_size(1050,800)
- driver.install_addon(os.environ['PYROBOLIC_FIREFOX_XPI'],temporary=True)
+ permanent = os.environ.get('PYROBOLIC_SIGNED_INSTALL') == '1'
+ driver.install_addon(os.environ['PYROBOLIC_FIREFOX_XPI'],temporary=not permanent)
+ if permanent:
+  driver.set_context('chrome')
+  state = driver.execute_async_script('''
+   const done = arguments[arguments.length - 1];
+   const {AddonManager} = ChromeUtils.importESModule('resource://gre/modules/AddonManager.sys.mjs');
+   AddonManager.getAddonByID('pyrobolic@woodpile72').then(a => done({
+    signed: a.signedState, temporary: a.temporarilyInstalled, disabled: a.appDisabled,
+    required: Services.prefs.getBoolPref('xpinstall.signatures.required', true), version: a.version
+   }));
+  ''')
+  assert state['required'] and state['signed'] > 0 and not state['temporary'] and not state['disabled'], state
+  assert state['version'] == '1.0.0', state
+  driver.set_context('content')
+  driver.install_addon(os.environ['PYROBOLIC_FIREFOX_XPI'],temporary=False)
+  print('PASS: Mozilla signature verified with permanent installation and signed reinstallation', flush=True)
  driver.get(base+'popup.html')
  wait.until(lambda d:'ready' in d.find_element(By.ID,'connection').text)
  print('PASS: installed Firefox extension connects to real native bridge',flush=True)

@@ -265,6 +265,8 @@
     "extensions/tests/test_bridge.py",
     "extensions/tests/test_extension.cjs",
     "media/screenshots/firefox-extension.png",
-    "extensions/tests/test_build.py"
+    "extensions/tests/test_build.py",
+    "extensions/firefox/signed.xpi",
+    "extensions/tests/firefox_signed.py"
   ]
 }
