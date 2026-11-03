@@ -62,6 +62,8 @@ def build(output, epoch=1793188800, revision=1, maintainer=DEFAULT_MAINTAINER):
                 icon = stage / "usr/share/icons/hicolor" / Path(name).relative_to("pyrobolic/icons/hicolor")
                 icon.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(root / name, icon)
+        from extensions.build import stage_extensions
+        stage_extensions(root, stage, release_files(root, "source"), require_signed=revision is None)
         write("usr/lib/pyrobolic/pyrobolic/__init__.py",
               '# SPDX-License-Identifier: GPL-3.0-only\n# Copyright 2026 Erick Woods\n'
               f'__version__ = "{version}"\n')
@@ -98,6 +100,8 @@ def build(output, epoch=1793188800, revision=1, maintainer=DEFAULT_MAINTAINER):
               f"Maintainer: {maintainer}\nSection: video\nPriority: optional\nInstalled-Size: {(size + 1023) // 1024}\n"
               "Depends: python3 (>= 3.10), python3-gi, python3-xlib, gir1.2-gtk-4.0 (>= 4.14), gir1.2-adw-1 (>= 1.5), gir1.2-gdkpixbuf-2.0, librsvg2-common, gir1.2-secret-1, ffmpeg, yt-dlp\n"
               "Recommends: gnome-keyring, xdg-utils\n"
+              "Conflicts: pyrobolic-external-plugins (<< 0.2.0)\n"
+              "Replaces: pyrobolic-external-plugins (<< 0.2.0)\n"
               "Description: Native GTK media downloader powered by yt-dlp\n"
               " Download video and audio with playlists, format and subtitle controls,\n"
               " verified output publication and optional background tray operation.\n")
@@ -107,7 +111,7 @@ def build(output, epoch=1793188800, revision=1, maintainer=DEFAULT_MAINTAINER):
         for path in sorted(stage.rglob("*"), reverse=True):
             if path.is_dir():
                 path.chmod(0o755)
-            elif path != stage / "usr/bin/pyrobolic":
+            elif path not in {stage / "usr/bin/pyrobolic", stage / "usr/lib/pyrobolic/extensions/firefox/host.py"}:
                 path.chmod(0o644)
             os.utime(path, (epoch, epoch))
         os.utime(stage, (epoch, epoch))

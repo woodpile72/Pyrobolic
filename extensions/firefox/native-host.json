@@ -1,0 +1,9 @@
+{
+  "name": "io.github.woodpile72.pyrobolic",
+  "description": "Send explicit Firefox URL requests to Pyrobolic",
+  "path": "/usr/lib/pyrobolic/extensions/firefox/host.py",
+  "type": "stdio",
+  "allowed_extensions": [
+    "pyrobolic@woodpile72"
+  ]
+}

@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright 2026 Erick Woods
 import hashlib
+import json
+import zipfile
 import os
 from pathlib import Path
 import subprocess
@@ -14,6 +16,12 @@ class PackagingTests(unittest.TestCase):
     def test_base_version_without_development_suffix(self):
         from pyrobolic import __version__
         with tempfile.TemporaryDirectory() as directory:
+            from package_deb import release_files
+            from extensions.build import SIGNED
+            if SIGNED not in release_files(Path(__file__).resolve().parents[1], "source"):
+                with self.assertRaisesRegex(ValueError, "Mozilla-signed"):
+                    build(Path(directory) / "base.deb", revision=None)
+                return
             package = build(Path(directory) / "base.deb", revision=None)
             version = subprocess.check_output(["dpkg-deb", "-f", str(package), "Version"], text=True).strip()
             self.assertEqual(version, __version__)
@@ -28,6 +36,17 @@ class PackagingTests(unittest.TestCase):
             unpacked = root / "unpacked"
             subprocess.run(["dpkg-deb", "-x", str(first), str(unpacked)], check=True, capture_output=True)
             self.assertTrue((unpacked / "usr/bin/pyrobolic").stat().st_mode & 0o111)
+            host = unpacked / "usr/lib/pyrobolic/extensions/firefox/host.py"
+            self.assertTrue(host.stat().st_mode & 0o111)
+            self.assertTrue((unpacked / "usr/lib/pyrobolic/extensions/native/bridge.py").is_file())
+            registration = json.loads((unpacked / "usr/lib/mozilla/native-messaging-hosts/io.github.woodpile72.pyrobolic.json").read_text())
+            self.assertEqual(registration["path"], "/usr/lib/pyrobolic/extensions/firefox/host.py")
+            self.assertEqual(registration["allowed_extensions"], ["pyrobolic@woodpile72"])
+            xpis = list((unpacked / "usr/share/pyrobolic/extensions/firefox").glob("*.xpi"))
+            self.assertEqual(len(xpis), 1)
+            with zipfile.ZipFile(xpis[0]) as archive:
+                self.assertEqual(json.loads(archive.read("manifest.json"))["version"], "1.0.0")
+                self.assertNotIn("host.py", archive.namelist())
             self.assertFalse(list(unpacked.rglob("*.pyc")))
             docs = unpacked / "usr/share/doc/pyrobolic"
             self.assertFalse(list(unpacked.rglob("*.md")))
@@ -51,4 +70,5 @@ class PackagingTests(unittest.TestCase):
                 self.assertTrue((private / "usr/bin/pyrobolic").exists())
             subprocess.run(command + ["--remove", "pyrobolic"], check=True, capture_output=True)
             self.assertFalse((private / "usr/bin/pyrobolic").exists())
+            self.assertFalse((private / "usr/lib/mozilla/native-messaging-hosts/io.github.woodpile72.pyrobolic.json").exists())
             self.assertEqual(user_data.read_bytes(), b"keep personal state")

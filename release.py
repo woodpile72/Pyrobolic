@@ -82,6 +82,12 @@ def bundle(destination, revision=None, epoch=None, maintainer=DEFAULT_MAINTAINER
         destination.mkdir(parents=True, exist_ok=False)
         source = destination / f"pyrobolic_{version}_source.tar.xz"
         inventory = snapshot(source, epoch, root)
+        signed_extension = root / "extensions/firefox/signed.xpi"
+        firefox_asset = None
+        if signed_extension.is_file():
+            extension_version = json.loads((root / "extensions/firefox/addon/manifest.json").read_text())["version"]
+            firefox_asset = destination / f"pyrobolic-firefox-{extension_version}.xpi"
+            firefox_asset.write_bytes(signed_extension.read_bytes())
     package = destination / f"pyrobolic_{version}_all.deb"
     version_args = ["--base-version"] if revision is None else ["--revision", str(revision)]
     # Build the frozen inputs, not a checkout that may change after snapshotting.
@@ -100,9 +106,12 @@ def bundle(destination, revision=None, epoch=None, maintainer=DEFAULT_MAINTAINER
                         "dpkg_deb": subprocess.check_output(["dpkg-deb", "--version"], text=True).splitlines()[0]},
         "rebuild": f"SOURCE_DATE_EPOCH={epoch} /usr/bin/python3 package_deb.py rebuilt.deb {' '.join(version_args)} --maintainer '{maintainer}'",
     }
+    if firefox_asset:
+        information["firefox_extension"] = {"file": firefox_asset.name, "sha256": sha256(firefox_asset),
+                                             "distribution": "mozilla-unlisted"}
     info = destination / "build-info.json"
     info.write_text(json.dumps(information, indent=2, sort_keys=True) + "\n")
-    (destination / "SHA256SUMS").write_text("".join(f"{sha256(path)}  {path.name}\n" for path in (source, package, info)))
+    (destination / "SHA256SUMS").write_text("".join(f"{sha256(path)}  {path.name}\n" for path in [source, package, info, *([firefox_asset] if firefox_asset else [])]))
     return package
 
 

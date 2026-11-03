@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pyrobolic</title><link rel="stylesheet" href="style.css"></head>
+<body class="popup">
+<header><img src="icons/pyrobolic.svg" width="52" height="52" alt=""><div><h1>Pyrobolic</h1><p>From your browser to your library.</p></div></header>
+<main>
+  <section class="source" aria-labelledby="source-heading"><span class="eyebrow" id="source-heading">CURRENT PAGE</span><h2 id="page-title">Reading this tab…</h2><p id="page-host"></p></section>
+  <form id="send-form"><label for="url">Page or media link</label><input id="url" type="url" inputmode="url" spellcheck="false" autocomplete="off" placeholder="https://…" required maxlength="8192"><button id="send" class="primary" type="submit" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 17v4h14v-4"/></svg>Send to Pyrobolic</button></form>
+  <p class="explanation">Choose quality, audio and subtitles in the app before downloading.</p>
+  <p id="result" role="status" aria-live="polite" hidden></p>
+</main>
+<footer><span id="connection" role="status"><span class="dot"></span>Checking connection…</span><button id="help" class="text-button" type="button">Setup &amp; Help</button></footer>
+<script src="shared.js"></script><script src="popup.js"></script>
+</body></html>

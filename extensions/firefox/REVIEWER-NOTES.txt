@@ -1,0 +1,32 @@
+Pyrobolic for Firefox 1.0.0 — unlisted/self-distributed
+Copyright 2026 Erick Woods; GPL-3.0-only.
+
+Linux-only integration with the Pyrobolic desktop media downloader.
+Please sign for self-distribution; no public AMO listing is requested.
+
+Required companion: Pyrobolic 1.2.0 Debian package. Native Firefox is supported;
+Snap/Flatpak may isolate native messaging and are not supported in this release.
+The app uses Python/GTK4/libadwaita and requires Linux Mint 22.3 / Ubuntu 24.04 or
+compatible dependencies. Companion source and package accompany this submission.
+
+Install the deb, then load this extension. Its native host is
+io.github.woodpile72.pyrobolic, registered in /usr/lib/mozilla/native-messaging-hosts.
+The adapter is /usr/lib/pyrobolic/extensions/firefox/host.py and shared bridge is
+/usr/lib/pyrobolic/extensions/native/bridge.py. Only pyrobolic@woodpile72 is allowed.
+
+To test without downloading media:
+1. Open any HTTP(S) page, click the Pyrobolic toolbar icon and Send to Pyrobolic.
+2. The desktop application opens a New Download review with that URL.
+3. Cancel the review. No extraction or download is started by the extension.
+4. Right-click a web link and choose Send Link to Pyrobolic for the same handoff.
+5. Private-window use requires the user's Run in Private Windows permission.
+
+Permissions: activeTab reads the tab upon user interaction; menus adds context
+menu actions; nativeMessaging delivers the explicit URL to the local companion.
+No content scripts, cookies, all-sites permissions, download interception,
+telemetry, remote code or remote services are used by the extension. Download
+history and network activity after review are managed by the desktop application.
+
+All extension JavaScript is readable source; no bundler, minifier or generated
+code is involved. The XPI is a deterministic ZIP of extensions/firefox/addon/.
+No additional source transformation is required to review the extension.

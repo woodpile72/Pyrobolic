@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Pyrobolic",
+  "version": "1.0.0",
+  "description": "Send pages, links and media to Pyrobolic for review and download on Linux.",
+  "author": "Erick Woods",
+  "homepage_url": "https://github.com/woodpile72/Pyrobolic",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "pyrobolic@woodpile72",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "menus",
+    "nativeMessaging"
+  ],
+  "background": {
+    "scripts": [
+      "shared.js",
+      "background.js"
+    ]
+  },
+  "action": {
+    "default_title": "Send to Pyrobolic",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/pyrobolic-16.png",
+      "32": "icons/pyrobolic-32.png"
+    },
+    "theme_icons": [
+      {
+        "light": "icons/symbol-white.svg",
+        "dark": "icons/symbol-black.svg",
+        "size": 16
+      },
+      {
+        "light": "icons/symbol-white.svg",
+        "dark": "icons/symbol-black.svg",
+        "size": 32
+      }
+    ]
+  },
+  "icons": {
+    "48": "icons/pyrobolic-48.png",
+    "96": "icons/pyrobolic-96.png"
+  },
+  "options_ui": {
+    "page": "help.html",
+    "open_in_tab": true
+  }
+}

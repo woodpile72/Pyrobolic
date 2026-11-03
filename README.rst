@@ -12,8 +12,8 @@ choices simple, with detailed format, subtitle and playlist controls when you
 need them. Built with Python, GTK 4 and libadwaita. **No .NET runtime.**
 Powered by yt-dlp and FFmpeg.
 
-`Download Pyrobolic 1.0.4 for Linux (.deb) <https://github.com/woodpile72/Pyrobolic/releases/download/v1.0.4/pyrobolic_1.0.4_all.deb>`_
-· `Release notes <https://github.com/woodpile72/Pyrobolic/releases/tag/v1.0.4>`_
+`Download Pyrobolic 1.2.0 for Linux (.deb) <https://github.com/woodpile72/Pyrobolic/releases/download/v1.2.0/pyrobolic_1.2.0_all.deb>`_
+· `Release notes <https://github.com/woodpile72/Pyrobolic/releases/tag/v1.2.0>`_
 · `Report an issue <https://github.com/woodpile72/Pyrobolic/issues>`_
 
 .. image:: media/screenshots/downloads.png
@@ -27,11 +27,11 @@ Install
 
 The tested target is **Linux Mint 22.3 / Ubuntu 24.04 on x86-64 (amd64)**.
 Download the Debian package and
-`SHA256SUMS <https://github.com/woodpile72/Pyrobolic/releases/download/v1.0.4/SHA256SUMS>`_
+`SHA256SUMS <https://github.com/woodpile72/Pyrobolic/releases/download/v1.2.0/SHA256SUMS>`_
 into the same folder, then run::
 
     sha256sum --ignore-missing -c SHA256SUMS
-    sudo apt install ./pyrobolic_1.0.4_all.deb
+    sudo apt install ./pyrobolic_1.2.0_all.deb
 
 Confirm that the package checksum reports ``OK``, then open **Pyrobolic** from
 your application menu. For an upgrade, quit Pyrobolic first and use the same
@@ -41,6 +41,36 @@ The package declares its desktop and media dependencies, including GTK 4.14+
 and libadwaita 1.5+. A Secret Service provider such as GNOME Keyring is recommended
 for saved credentials. The ``all`` package contains architecture-independent
 Python; other architectures and distributions have not been verified.
+
+Firefox extension
+-----------------
+
+**New in 1.2.0:** send the current page, a link, or media to Pyrobolic from Firefox.
+Use the toolbar popup or a right-click action, then review the download in the app.
+
+The main Debian package includes the browser bridge and Firefox add-on. Install
+``pyrobolic-firefox-1.0.0.xpi`` from the GitHub release using Firefox's Add-ons Manager
+/ Install Add-on From File. The same signed file is bundled at
+``/usr/share/pyrobolic/extensions/firefox/pyrobolic-firefox.xpi``.
+Mozilla signing is unlisted; distribution stays with this project.
+
+.. image:: media/screenshots/firefox-extension.png
+   :alt: Pyrobolic Firefox toolbar popup with current page and Send to Pyrobolic action
+   :width: 386
+
+Native Linux Firefox 140+ is required; Firefox 153 was tested. Snap/Flatpak Firefox
+is not supported in this release. Firefox itself is optional for using Pyrobolic.
+
+For private windows, select Pyrobolic in ``about:addons`` and enable **Run in Private
+Windows → Allow**. Submitted downloads still use Pyrobolic's normal history.
+
+Extension updates are manual for now: install each newer signed XPI from GitHub.
+Updating the deb updates the bundled file, but does not change your Firefox profile.
+The old external-plugins preview package is replaced during the main package upgrade.
+
+Browser code lives under ``extensions/``, with a shared native bridge and a separate
+Firefox adapter. Other browsers can be added without changing the download engine.
+See `extension setup and contributor notes <extensions/README.rst>`_.
 
 What it does
 ------------
@@ -132,8 +162,8 @@ To build the released source with Git, Python 3.12 and Debian packaging tools::
 
     git clone https://github.com/woodpile72/Pyrobolic.git
     cd Pyrobolic
-    git checkout v1.0.4
-    python3 release.py /tmp/pyrobolic-release --base-version --commit v1.0.4
+    git checkout v1.2.0
+    python3 release.py /tmp/pyrobolic-release --base-version --commit v1.2.0
 
 Use a new output directory. The release tool builds the specified commit.
 With the application dependencies installed, run the standard tests with::
